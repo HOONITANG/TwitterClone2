@@ -6,12 +6,19 @@
 //
 
 import UIKit
+import Firebase
 
 private let reuseIdentifier = "TweetCell"
+let DB_REF = Database.database().reference()
 
 class FeedController: UICollectionViewController {
     
     // MARK: - Properties
+    var user: User? {
+        didSet {
+            print("Debug:: usernamse is \(user?.fullname)")
+        }
+    }
  
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -29,6 +36,9 @@ class FeedController: UICollectionViewController {
         imageView.setDimensions(width: 44, height: 44)
         
         navigationItem.titleView = imageView
+    }
+    
+    func fetchTweet() {
         
     }
     

@@ -9,6 +9,14 @@ import UIKit
 
 class MainTabController: UITabBarController {
     
+    var user:User? {
+        didSet {
+            guard let nav = viewControllers?[0] as? UINavigationController else { return }
+            guard let feed =  nav.viewControllers.first as? FeedController else { return }
+            feed.user = user
+        }
+    }
+    
     // MARK: - Properties
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
@@ -24,6 +32,11 @@ class MainTabController: UITabBarController {
         super.viewDidLoad()
         configureViewController()
         configureUI()
+        fetchUser()
+    }
+    
+    func fetchUser() {
+        user = User(dictionary: [:])
     }
     
     // MARK: - Helpers
@@ -33,9 +46,8 @@ class MainTabController: UITabBarController {
         view.addSubview(actionButton)
         actionButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
         actionButton.layer.cornerRadius = 56 / 2
-        
-        
     }
+    
     
     func configureViewController() {
         let feed = FeedController(collectionViewLayout: UICollectionViewFlowLayout())
@@ -57,9 +69,12 @@ class MainTabController: UITabBarController {
     
     // MARK: - Selector
     @objc func actionButtonTapped() {
-        let controller = UploadTweetController()
+    
+        guard let user = user else { return }
+        let controller = UploadTweetController(user: user)
         let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
+        
         present(nav, animated: true, completion: nil)
     }
 }
